@@ -1,0 +1,9 @@
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Raleway', sans-serif;
+    /* font-family: 'Saira Stencil One', cursive; */
+}
