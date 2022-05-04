@@ -7,7 +7,7 @@ import UserContext from "../contexts/UserContext"
 
 export default function SignIn() {
   const navigate = useNavigate()
-  const [valid, setValid] = useState(true)
+  const [valid, setValid] = useState(true) // check if input data is valid
   const { setUser } = useContext(UserContext)
 
   function submitForm(e) {
