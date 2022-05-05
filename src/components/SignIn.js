@@ -20,6 +20,10 @@ export default function SignIn() {
     })
     promisse.then((response) => {
       setUser(response.data)
+
+      const userString = JSON.stringify(response.data)
+      localStorage.setItem("project13user", userString)
+
       navigate("/main")
     })
     promisse.catch((e) => {

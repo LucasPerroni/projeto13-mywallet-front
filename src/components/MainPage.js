@@ -26,6 +26,7 @@ export default function MainPage() {
   function returnSignIn() {
     const confirm = window.confirm("Do you want to sign out?")
     if (confirm) {
+      localStorage.removeItem("project13user")
       navigate("/")
     }
   }

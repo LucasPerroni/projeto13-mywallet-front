@@ -10,7 +10,14 @@ import Payment from "./Payment"
 import UserContext from "../contexts/UserContext"
 
 export default function App() {
-  const [user, setUser] = useState({})
+  // Get 'user' obj from localStorage
+  const savedUserString = localStorage.getItem("project13user")
+  let savedUser = JSON.parse(savedUserString)
+  if (savedUser === null) {
+    savedUser = {}
+  }
+
+  const [user, setUser] = useState(savedUser)
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
