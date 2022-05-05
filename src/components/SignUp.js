@@ -77,17 +77,20 @@ const Main = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
+  
+  position: absolute;
+  width: 100%;
+  height: 100%;
 
-  width: 90%;
-  margin: 100px auto 0;
+  overflow-y: auto;
 
   form {
-    width: 100%;
+    width: 90%;
   }
 
   h1 {
     font-family: "Saira Stencil One", cursive;
-    margin-bottom: 24px;
+    margin: 100px 0 24px;
 
     font-size: 32px;
     color: #ffffff;
