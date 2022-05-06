@@ -49,6 +49,7 @@ export default function MainPage() {
     }
     total = Math.abs(total).toFixed(2)
 
+    history.reverse() // show newer transactions first
     return (
       <>
         <div className="history">
