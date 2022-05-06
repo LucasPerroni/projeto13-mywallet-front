@@ -83,6 +83,7 @@ function BankHistory({ history, setRefresh, refresh, config, navigate }) {
     navigate("/edit", { state: { id, value, description, type } })
   }
 
+  // get account balance and reverse history array
   let total = 0 // account balance
   let negative = false // check if balance is negative or not
   // get balance
@@ -93,13 +94,12 @@ function BankHistory({ history, setRefresh, refresh, config, navigate }) {
       total -= parseFloat(h.value)
     }
   })
-
   if (total < 0) {
     negative = true
   }
   total = Math.abs(total).toFixed(2)
-
   history.reverse() // show newer transactions first
+
   return (
     <>
       <div className="history">

@@ -21,6 +21,7 @@ export default function Edit() {
     const promisse = axios.put(
       URI,
       {
+        type: state.type,
         value: e.target[0].value,
         description: e.target[1].value,
       },
