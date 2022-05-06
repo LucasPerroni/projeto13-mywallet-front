@@ -32,60 +32,6 @@ export default function MainPage() {
     }
   }
 
-  // delete a transaction
-  function deleteTransaction(id, description) {
-    const proceed = window.confirm(`Do you want to delete the transaction [ ${description} ]?`)
-    if (proceed) {
-      const URI = `http://localhost:5000/bank/${id}`
-      const promisse = axios.delete(URI, { headers: config })
-      promisse.then((response) => setRefresh(!refresh))
-      promisse.catch((e) => alert("Error"))
-    }
-  }
-
-  // section of transactions
-  function bankHistory() {
-    let total = 0 // account balance
-    let negative = false // check if balance is negative or not
-    // get balance
-    history.forEach((h) => {
-      if (h.type === "entry") {
-        total += parseFloat(h.value)
-      } else {
-        total -= parseFloat(h.value)
-      }
-    })
-
-    if (total < 0) {
-      negative = true
-    }
-    total = Math.abs(total).toFixed(2)
-
-    history.reverse() // show newer transactions first
-    return (
-      <>
-        <div className="history">
-          {history.map(({ _id, date, description, value, type }) => {
-            return (
-              <p key={`${description} - ${value}`}>
-                <time>{date}</time>
-                <span>{description}</span>
-                <var style={type === "payment" ? { color: "var(--red)" } : { color: "var(--green)" }}>
-                  {value}
-                </var>
-                <ion-icon name="close-outline" onClick={() => deleteTransaction(_id, description)}></ion-icon>
-              </p>
-            )
-          })}
-        </div>
-        <div className="balance">
-          <h4>BALANCE</h4>
-          <var style={negative ? { color: "var(--red)" } : { color: "var(--green)" }}>{total}</var>
-        </div>
-      </>
-    )
-  }
-
   return (
     <Main>
       <Top>
@@ -96,7 +42,13 @@ export default function MainPage() {
         {history.length === 0 ? (
           <p className="null">There isn't any entry or payment in your history</p>
         ) : (
-          bankHistory()
+          <BankHistory
+            history={history}
+            refresh={refresh}
+            setRefresh={setRefresh}
+            config={config}
+            navigate={navigate}
+          />
         )}
       </History>
       <Wrapper>
@@ -110,6 +62,65 @@ export default function MainPage() {
         </article>
       </Wrapper>
     </Main>
+  )
+}
+
+// section of transactions
+function BankHistory({ history, setRefresh, refresh, config, navigate }) {
+  // delete a transaction
+  function deleteTransaction(id, description) {
+    const proceed = window.confirm(`Do you want to delete the transaction [ ${description} ]?`)
+    if (proceed) {
+      const URI = `http://localhost:5000/bank/${id}`
+      const promisse = axios.delete(URI, { headers: config })
+      promisse.then((response) => setRefresh(!refresh))
+      promisse.catch((e) => alert("Error"))
+    }
+  }
+
+  // edit a transaction
+  function editTransaction(id, value, description, type) {
+    navigate("/edit", { state: { id, value, description, type } })
+  }
+
+  let total = 0 // account balance
+  let negative = false // check if balance is negative or not
+  // get balance
+  history.forEach((h) => {
+    if (h.type === "entry") {
+      total += parseFloat(h.value)
+    } else {
+      total -= parseFloat(h.value)
+    }
+  })
+
+  if (total < 0) {
+    negative = true
+  }
+  total = Math.abs(total).toFixed(2)
+
+  history.reverse() // show newer transactions first
+  return (
+    <>
+      <div className="history">
+        {history.map(({ _id, date, description, value, type }) => {
+          return (
+            <p key={`${description} - ${value}`}>
+              <time>{date}</time>
+              <span onClick={() => editTransaction(_id, value, description, type)}>{description}</span>
+              <var style={type === "payment" ? { color: "var(--red)" } : { color: "var(--green)" }}>
+                {value}
+              </var>
+              <ion-icon name="close-outline" onClick={() => deleteTransaction(_id, description)}></ion-icon>
+            </p>
+          )
+        })}
+      </div>
+      <div className="balance">
+        <h4>BALANCE</h4>
+        <var style={negative ? { color: "var(--red)" } : { color: "var(--green)" }}>{total}</var>
+      </div>
+    </>
   )
 }
 
@@ -187,7 +198,9 @@ const History = styled.article`
       display: block;
       max-width: 48%;
       height: 16px;
+
       overflow: hidden;
+      cursor: pointer;
     }
 
     var {

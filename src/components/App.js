@@ -6,6 +6,7 @@ import SignUp from "./SignUp"
 import MainPage from "./MainPage"
 import Entry from "./Entry"
 import Payment from "./Payment"
+import Edit from "./Edit"
 
 import UserContext from "../contexts/UserContext"
 
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/main" element={<MainPage />} />
           <Route path="/entry" element={<Entry />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/edit" element={<Edit />} />
           <Route path="*" element={<p>This page does not exist!</p>} />
         </Routes>
       </BrowserRouter>
