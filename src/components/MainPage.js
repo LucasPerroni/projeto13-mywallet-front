@@ -8,6 +8,7 @@ import UserContext from "./../contexts/UserContext"
 export default function MainPage() {
   const { user } = useContext(UserContext)
   const [history, setHistory] = useState([]) // history of transactions
+  const [refresh, setRefresh] = useState(false) // refresh history after a promisse
   const navigate = useNavigate()
 
   const config = { Authorization: `Bearer ${user.token}` } // authorization token
@@ -20,7 +21,7 @@ export default function MainPage() {
       setHistory(response.data)
     })
     promisse.catch((e) => console.log(e.response))
-  }, [])
+  }, [refresh])
 
   // return to Sign In page
   function returnSignIn() {
@@ -28,6 +29,17 @@ export default function MainPage() {
     if (confirm) {
       localStorage.removeItem("project13user")
       navigate("/")
+    }
+  }
+
+  // delete a transaction
+  function deleteTransaction(id, description) {
+    const proceed = window.confirm(`Do you want to delete the transaction [ ${description} ]?`)
+    if (proceed) {
+      const URI = `http://localhost:5000/bank/${id}`
+      const promisse = axios.delete(URI, { headers: config })
+      promisse.then((response) => setRefresh(!refresh))
+      promisse.catch((e) => alert("Error"))
     }
   }
 
@@ -53,7 +65,7 @@ export default function MainPage() {
     return (
       <>
         <div className="history">
-          {history.map(({ date, description, value, type }) => {
+          {history.map(({ _id, date, description, value, type }) => {
             return (
               <p key={`${description} - ${value}`}>
                 <time>{date}</time>
@@ -61,6 +73,7 @@ export default function MainPage() {
                 <var style={type === "payment" ? { color: "var(--red)" } : { color: "var(--green)" }}>
                   {value}
                 </var>
+                <ion-icon name="close-outline" onClick={() => deleteTransaction(_id, description)}></ion-icon>
               </p>
             )
           })}
@@ -159,6 +172,8 @@ const History = styled.article`
 
   p {
     display: flex;
+    align-items: center;
+
     position: relative;
     font-size: 16px;
     margin-bottom: 25px;
@@ -170,14 +185,23 @@ const History = styled.article`
 
     span {
       display: block;
-      max-width: 65%;
+      max-width: 48%;
       height: 16px;
       overflow: hidden;
     }
 
     var {
       position: absolute;
+      right: 26px;
+    }
+
+    ion-icon {
+      position: absolute;
       right: 0;
+
+      font-size: 20px;
+      color: #c6c6c6;
+      cursor: pointer;
     }
   }
 
