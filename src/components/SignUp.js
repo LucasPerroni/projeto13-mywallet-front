@@ -17,7 +17,7 @@ export default function SignIn() {
 
   function submitForm(e) {
     e.preventDefault()
-    const URI = "http://localhost:5000/signup"
+    const URI = "https://projeto13.herokuapp.com/signup"
 
     if (e.target[2].value !== e.target[3].value) {
       setValid(false)

@@ -15,7 +15,7 @@ export default function Entry() {
   function submitForm(e) {
     e.preventDefault()
 
-    const URI = "http://localhost:5000/bank"
+    const URI = "https://projeto13.herokuapp.com/bank"
     const promisse = axios.post(
       URI,
       {

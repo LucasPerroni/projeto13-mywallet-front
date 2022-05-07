@@ -12,7 +12,7 @@ export default function SignIn() {
 
   function submitForm(e) {
     e.preventDefault()
-    const URI = "http://localhost:5000/signin"
+    const URI = "https://projeto13.herokuapp.com/signin"
 
     const promisse = axios.post(URI, {
       email: e.target[0].value,

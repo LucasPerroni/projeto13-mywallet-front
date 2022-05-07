@@ -17,7 +17,7 @@ export default function Edit() {
   function submitForm(e, id) {
     e.preventDefault()
 
-    const URI = `http://localhost:5000/bank/${id}`
+    const URI = `https://projeto13.herokuapp.com/bank/${id}`
     const promisse = axios.put(
       URI,
       {

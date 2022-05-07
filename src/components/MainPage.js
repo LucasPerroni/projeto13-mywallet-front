@@ -15,7 +15,7 @@ export default function MainPage() {
 
   // get transaction history
   useEffect(() => {
-    const URI = "http://localhost:5000/bank"
+    const URI = "https://projeto13.herokuapp.com/bank"
     const promisse = axios.get(URI, { headers: config })
     promisse.then((response) => {
       setHistory(response.data)
@@ -71,7 +71,7 @@ function BankHistory({ history, setRefresh, refresh, config, navigate }) {
   function deleteTransaction(id, description) {
     const proceed = window.confirm(`Do you want to delete the transaction [ ${description} ]?`)
     if (proceed) {
-      const URI = `http://localhost:5000/bank/${id}`
+      const URI = `https://projeto13.herokuapp.com/bank/${id}`
       const promisse = axios.delete(URI, { headers: config })
       promisse.then((response) => setRefresh(!refresh))
       promisse.catch((e) => alert("Error"))
