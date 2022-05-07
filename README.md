@@ -1,3 +1,3 @@
 # Deploy:
 
-https://mywallet-qm9bxgbvj-lucasperroni.vercel.app/
+https://mywallet-bay.vercel.app/
