@@ -1,5 +1,6 @@
 import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { ThreeDots } from "react-loader-spinner"
 import styled from "styled-components"
 import axios from "axios"
 
@@ -8,12 +9,14 @@ import UserContext from "../contexts/UserContext"
 export default function Entry() {
   const navigate = useNavigate()
   const [valid, setValid] = useState(true) // validate if axios post was a success
+  const [loading, setLoading] = useState(false) // loading API request
   const { user } = useContext(UserContext)
 
   const config = { Authorization: `Bearer ${user.token}` }
 
   function submitForm(e) {
     e.preventDefault()
+    setLoading(true)
 
     const URI = "https://projeto13.herokuapp.com/bank"
     const promisse = axios.post(
@@ -26,20 +29,29 @@ export default function Entry() {
       { headers: config }
     )
     promisse.then((response) => navigate("/main"))
-    promisse.catch((e) => setValid(false))
+    promisse.catch((e) => {
+      setValid(false)
+      setLoading(false)
+    })
   }
 
   const examples = "Ex: 5.00 / 19.99 / 149.90" // examples of inputs in "value"
   return (
     <Main>
-      <div>
+      <header>
         <h1>New Entry</h1>
         <ion-icon name="arrow-back-outline" onClick={() => navigate("/main")}></ion-icon>
-      </div>
+      </header>
       <form onSubmit={(e) => submitForm(e)}>
         <input type="text" placeholder="Value" pattern="[1-9][0-9]*\.[0-9]{2}" title={examples} required />
         <input type="text" placeholder="Description" required />
-        <button type="submit">Submit</button>
+        <button
+          type="submit"
+          style={loading ? { opacity: 0.6, cursor: "auto" } : {}}
+          disabled={loading ? true : false}
+        >
+          {loading ? <ThreeDots color="#ffffff" height={46} /> : "Submit"}
+        </button>
       </form>
       {valid ? <></> : <p>Failed to create a new entry...</p>}
     </Main>
@@ -57,7 +69,7 @@ const Main = styled.main`
 
   overflow-y: auto;
 
-  div {
+  header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -94,6 +106,10 @@ const Main = styled.main`
   }
 
   button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     width: 100%;
     height: 46px;
 

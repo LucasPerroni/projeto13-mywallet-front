@@ -51,6 +51,7 @@ export default function MainPage() {
             history={history}
             refresh={refresh}
             setRefresh={setRefresh}
+            setLoading={setLoading}
             config={config}
             navigate={navigate}
           />
@@ -71,15 +72,20 @@ export default function MainPage() {
 }
 
 // section of transactions
-function BankHistory({ history, setRefresh, refresh, config, navigate }) {
+function BankHistory({ history, setRefresh, setLoading, refresh, config, navigate }) {
   // delete a transaction
   function deleteTransaction(id, description) {
     const proceed = window.confirm(`Do you want to delete the transaction [ ${description} ]?`)
     if (proceed) {
+      setLoading(true)
       const URI = `https://projeto13.herokuapp.com/bank/${id}`
       const promisse = axios.delete(URI, { headers: config })
-      promisse.then((response) => setRefresh(!refresh))
-      promisse.catch((e) => alert("Error"))
+      promisse.then((response) => {
+        setRefresh(!refresh)
+      })
+      promisse.catch((e) => {
+        alert("Error")
+      })
     }
   }
 
