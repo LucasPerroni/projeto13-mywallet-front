@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { ThreeDots } from "react-loader-spinner"
 import axios from "axios"
 import styled from "styled-components"
 
@@ -7,6 +8,7 @@ export default function SignIn() {
   const navigate = useNavigate()
   const [valid, setValid] = useState(true) // check if input data is valid
   const [show, setShow] = useState(false) // show password or not
+  const [loading, setLoading] = useState(false) // loading API request
   // list of all inputs
   const inputs = [
     { type: "text", placeholder: "Name" },
@@ -17,6 +19,7 @@ export default function SignIn() {
 
   function submitForm(e) {
     e.preventDefault()
+    setLoading(true)
     const URI = "https://projeto13.herokuapp.com/signup"
 
     if (e.target[2].value !== e.target[3].value) {
@@ -34,6 +37,7 @@ export default function SignIn() {
     })
     promisse.catch((e) => {
       setValid(false)
+      setLoading(false)
     })
   }
 
@@ -64,7 +68,13 @@ export default function SignIn() {
           <input type="checkbox" id="show" className="checkbox" onClick={(e) => showPassword(e)} />
           <label htmlFor="show">Show password</label>
         </div>
-        <button type="submit">Sign up</button>
+        <button
+          type="submit"
+          style={loading ? { opacity: 0.6, cursor: "auto" } : {}}
+          disabled={loading ? true : false}
+        >
+          {loading ? <ThreeDots color="#ffffff" height={46} /> : "Enter"}
+        </button>
       </form>
       <StyledLink to={"/"}>Alreary have an account? Sign-in!</StyledLink>
       {valid ? <></> : <p>Failed to create account...</p>}
@@ -77,7 +87,7 @@ const Main = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+
   position: absolute;
   width: 100%;
   height: 100%;
@@ -110,10 +120,14 @@ const Main = styled.main`
   }
 
   button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     width: 100%;
     height: 46px;
 
-    margin-bottom: 36px;
+    margin: 13px 0 36px;
     border: none;
     border-radius: 5px;
     background-color: #a328d6;
@@ -125,7 +139,7 @@ const Main = styled.main`
   }
 
   p {
-    margin-top: 24px;
+    margin-bottom: 25px;
     font-size: 20px;
     font-weight: 700;
     color: var(--error);
@@ -135,7 +149,6 @@ const Main = styled.main`
     display: flex;
     align-items: center;
     height: 25px;
-    margin-bottom: 13px;
   }
 
   .checkbox {
@@ -155,4 +168,5 @@ const StyledLink = styled(Link)`
   font-size: 15px;
   font-weight: 700;
   color: #ffffff;
+  margin-bottom: 25px;
 `

@@ -1,5 +1,6 @@
 import { useContext, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { ThreeDots } from "react-loader-spinner"
 import axios from "axios"
 import styled from "styled-components"
 
@@ -8,10 +9,12 @@ import UserContext from "../contexts/UserContext"
 export default function SignIn() {
   const navigate = useNavigate()
   const [valid, setValid] = useState(true) // check if input data is valid
+  const [loading, setLoading] = useState(false) // loading API request
   const { setUser } = useContext(UserContext)
 
   function submitForm(e) {
     e.preventDefault()
+    setLoading(true)
     const URI = "https://projeto13.herokuapp.com/signin"
 
     const promisse = axios.post(URI, {
@@ -28,6 +31,7 @@ export default function SignIn() {
     })
     promisse.catch((e) => {
       setValid(false)
+      setLoading(false)
     })
   }
 
@@ -37,7 +41,13 @@ export default function SignIn() {
       <form onSubmit={(e) => submitForm(e)}>
         <input type="email" placeholder="E-mail" required />
         <input type="password" placeholder="Password" required />
-        <button type="submit">Enter</button>
+        <button
+          type="submit"
+          style={loading ? { opacity: 0.6, cursor: "auto" } : {}}
+          disabled={loading ? true : false}
+        >
+          {loading ? <ThreeDots color="#ffffff" height="46px" /> : "Enter"}
+        </button>
       </form>
       <StyledLink to={"/sign-up"}>First time? Sign-up!</StyledLink>
       {valid ? <></> : <p>Failed to Sign-in...</p>}
@@ -83,6 +93,10 @@ const Main = styled.main`
   }
 
   button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     width: 100%;
     height: 46px;
 

@@ -4,11 +4,13 @@ import styled from "styled-components"
 import axios from "axios"
 
 import UserContext from "./../contexts/UserContext"
+import Gif from "../assets/images/Eclipse.gif"
 
 export default function MainPage() {
   const { user } = useContext(UserContext)
   const [history, setHistory] = useState([]) // history of transactions
   const [refresh, setRefresh] = useState(false) // refresh history after a promisse
+  const [loading, setLoading] = useState(true) // loading request
   const navigate = useNavigate()
 
   const config = { Authorization: `Bearer ${user.token}` } // authorization token
@@ -19,6 +21,7 @@ export default function MainPage() {
     const promisse = axios.get(URI, { headers: config })
     promisse.then((response) => {
       setHistory(response.data)
+      setLoading(false)
     })
     promisse.catch((e) => console.log(e.response))
   }, [refresh])
@@ -39,7 +42,9 @@ export default function MainPage() {
         <ion-icon name="exit-outline" onClick={returnSignIn}></ion-icon>
       </Top>
       <History style={history.length === 0 ? { justifyContent: "center", alignItems: "center" } : {}}>
-        {history.length === 0 ? (
+        {loading ? ( // check if the request is loading
+          <img src={Gif} alt="Loading animation" />
+        ) : history.length === 0 ? ( // check if there are any transactions
           <p className="null">There isn't any entry or payment in your history</p>
         ) : (
           <BankHistory
@@ -175,6 +180,11 @@ const History = styled.article`
   background-color: #ffffff;
   border-radius: 5px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+
+  img {
+    width: 200px;
+    margin: auto;
+  }
 
   .history {
     max-height: 95%;
